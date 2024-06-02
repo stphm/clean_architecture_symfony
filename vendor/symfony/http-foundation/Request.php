@@ -750,7 +750,9 @@ class Request
      */
     public function getClientIp(): ?string
     {
-        return $this->getClientIps()[0];
+        $ipAddresses = $this->getClientIps();
+
+        return $ipAddresses[0];
     }
 
     /**

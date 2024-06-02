@@ -165,7 +165,6 @@ use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\String\LazyString;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Translation\Bridge as TranslationBridge;
-use Symfony\Component\Translation\Command\TranslationLintCommand as BaseTranslationLintCommand;
 use Symfony\Component\Translation\Command\XliffLintCommand as BaseXliffLintCommand;
 use Symfony\Component\Translation\Extractor\PhpAstExtractor;
 use Symfony\Component\Translation\LocaleSwitcher;
@@ -244,10 +243,6 @@ class FrameworkExtension extends Extension
             }
             if (!class_exists(BaseYamlLintCommand::class)) {
                 $container->removeDefinition('console.command.yaml_lint');
-            }
-
-            if (!class_exists(BaseTranslationLintCommand::class)) {
-                $container->removeDefinition('console.command.translation_lint');
             }
 
             if (!class_exists(DebugCommand::class)) {
@@ -377,7 +372,7 @@ class FrameworkExtension extends Extension
         $this->registerDebugConfiguration($config['php_errors'], $container, $loader);
         $this->registerRouterConfiguration($config['router'], $container, $loader, $config['enabled_locales']);
         $this->registerPropertyAccessConfiguration($config['property_access'], $container, $loader);
-        $this->registerSecretsConfiguration($config['secrets'], $container, $loader, $config['secret'] ?? null);
+        $this->registerSecretsConfiguration($config['secrets'], $container, $loader);
 
         $container->getDefinition('exception_listener')->replaceArgument(3, $config['exceptions']);
 
@@ -1418,7 +1413,6 @@ class FrameworkExtension extends Extension
             $container->removeDefinition('console.command.translation_extract');
             $container->removeDefinition('console.command.translation_pull');
             $container->removeDefinition('console.command.translation_push');
-            $container->removeDefinition('console.command.translation_lint');
 
             return;
         }
@@ -1761,7 +1755,7 @@ class FrameworkExtension extends Extension
         ;
     }
 
-    private function registerSecretsConfiguration(array $config, ContainerBuilder $container, PhpFileLoader $loader, ?string $secret): void
+    private function registerSecretsConfiguration(array $config, ContainerBuilder $container, PhpFileLoader $loader): void
     {
         if (!$this->readConfigEnabled('secrets', $container, $config)) {
             $container->removeDefinition('console.command.secrets_set');
@@ -1777,9 +1771,6 @@ class FrameworkExtension extends Extension
 
         $loader->load('secrets.php');
 
-        $container->resolveEnvPlaceholders($secret, null, $usedEnvs);
-        $secretEnvVar = 1 === \count($usedEnvs ?? []) ? substr(key($usedEnvs), 1 + (strrpos(key($usedEnvs), ':') ?: -1)) : null;
-        $container->getDefinition('secrets.vault')->replaceArgument(2, $secretEnvVar);
         $container->getDefinition('secrets.vault')->replaceArgument(0, $config['vault_directory']);
 
         if ($config['local_dotenv_file']) {
@@ -2792,7 +2783,6 @@ class FrameworkExtension extends Extension
             NotifierBridge\OvhCloud\OvhCloudTransportFactory::class => 'notifier.transport_factory.ovh-cloud',
             NotifierBridge\PagerDuty\PagerDutyTransportFactory::class => 'notifier.transport_factory.pager-duty',
             NotifierBridge\Plivo\PlivoTransportFactory::class => 'notifier.transport_factory.plivo',
-            NotifierBridge\Primotexto\PrimotextoTransportFactory::class => 'notifier.transport_factory.primotexto',
             NotifierBridge\Pushover\PushoverTransportFactory::class => 'notifier.transport_factory.pushover',
             NotifierBridge\Pushy\PushyTransportFactory::class => 'notifier.transport_factory.pushy',
             NotifierBridge\Redlink\RedlinkTransportFactory::class => 'notifier.transport_factory.redlink',

@@ -1,18 +1,18 @@
 {
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "symfony/console": "7.2.*",
-        "symfony/dotenv": "7.2.*",
+        "symfony/console": "7.1.*",
+        "symfony/dotenv": "7.1.*",
         "symfony/flex": "^2",
-        "symfony/framework-bundle": "7.2.*",
-        "symfony/runtime": "7.2.*",
-        "symfony/yaml": "7.2.*"
+        "symfony/framework-bundle": "7.1.*",
+        "symfony/runtime": "7.1.*",
+        "symfony/yaml": "7.1.*"
     },
     "require-dev": {
     },
@@ -26,12 +26,13 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "Domain\\": "src/Domain",
+            "Infrastructure\\": "src/Infrastructure"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "Tests\\": "tests/"
         }
     },
     "replace": {
@@ -62,7 +63,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.2.*"
+            "require": "7.1.*"
         }
     }
 }

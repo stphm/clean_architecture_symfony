@@ -26,18 +26,16 @@ class SodiumVault extends AbstractVault implements EnvVarLoaderInterface
     private string|\Stringable|null $decryptionKey = null;
     private string $pathPrefix;
     private ?string $secretsDir;
-    private ?string $derivedSecretEnvVar;
 
     /**
      * @param $decryptionKey A string or a stringable object that defines the private key to use to decrypt the vault
      *                       or null to store generated keys in the provided $secretsDir
      */
-    public function __construct(string $secretsDir, #[\SensitiveParameter] string|\Stringable|null $decryptionKey = null, ?string $derivedSecretEnvVar = null)
+    public function __construct(string $secretsDir, #[\SensitiveParameter] string|\Stringable|null $decryptionKey = null)
     {
         $this->pathPrefix = rtrim(strtr($secretsDir, '/', \DIRECTORY_SEPARATOR), \DIRECTORY_SEPARATOR).\DIRECTORY_SEPARATOR.basename($secretsDir).'.';
         $this->decryptionKey = $decryptionKey;
         $this->secretsDir = $secretsDir;
-        $this->derivedSecretEnvVar = $derivedSecretEnvVar;
     }
 
     public function generateKeys(bool $override = false): bool
@@ -177,11 +175,6 @@ class SodiumVault extends AbstractVault implements EnvVarLoaderInterface
 
         foreach ($this->list() as $name => $value) {
             $envs[$name] = LazyString::fromCallable($reveal, $name);
-        }
-
-        if ($this->derivedSecretEnvVar && !\array_key_exists($this->derivedSecretEnvVar, $envs)) {
-            $decryptionKey = $this->decryptionKey;
-            $envs[$this->derivedSecretEnvVar] = LazyString::fromCallable(static fn () => base64_encode(hash('sha256', $decryptionKey, true)));
         }
 
         return $envs;

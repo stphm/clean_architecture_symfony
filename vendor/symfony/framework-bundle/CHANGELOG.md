@@ -1,12 +1,6 @@
 CHANGELOG
 =========
 
-7.2
----
-
- * Add support for setting `headers` with `Symfony\Bundle\FrameworkBundle\Controller\TemplateController`
- * Derivate `kernel.secret` from the decryption secret when its env var is not defined
-
 7.1
 ---
 

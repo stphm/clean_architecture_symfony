@@ -54,7 +54,6 @@ use Symfony\Component\Messenger\Command\StatsCommand;
 use Symfony\Component\Messenger\Command\StopWorkersCommand;
 use Symfony\Component\Scheduler\Command\DebugCommand as SchedulerDebugCommand;
 use Symfony\Component\Serializer\Command\DebugCommand as SerializerDebugCommand;
-use Symfony\Component\Translation\Command\TranslationLintCommand;
 use Symfony\Component\Translation\Command\TranslationPullCommand;
 use Symfony\Component\Translation\Command\TranslationPushCommand;
 use Symfony\Component\Translation\Command\XliffLintCommand;
@@ -316,13 +315,6 @@ return static function (ContainerConfigurator $container) {
             ->tag('console.command')
 
         ->set('console.command.yaml_lint', YamlLintCommand::class)
-            ->tag('console.command')
-
-        ->set('console.command.translation_lint', TranslationLintCommand::class)
-            ->args([
-                service('translator'),
-                param('kernel.enabled_locales'),
-            ])
             ->tag('console.command')
 
         ->set('console.command.form_debug', \Symfony\Component\Form\Command\DebugCommand::class)
